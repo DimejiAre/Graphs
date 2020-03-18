@@ -80,21 +80,32 @@ class Graph:
                     # push the next vertex
                     s.push(next_vertex)
 
-    def dft_recursive(self, starting_vertex):
+    def dft_recursive(self, starting_vertex, visited=None):
         """
         Print each vertex in depth-first order
         beginning from starting_vertex.
 
         This should be done using recursion.
         """
-        if starting_vertex is None:
-            return None
-        for v in self.vertices[starting_vertex]:
-            return self.dft_recursive(v)
-
-        ret_list = [starting_vertex]
-        return ret_list
-        # pass
+        # if the visited structure is set to None
+        if visited is None:
+            # create a new set for visited
+            visited = set()
+            
+        
+        # add a starting vertex to the visited set
+        visited.add(starting_vertex)
+        
+        # print the start vertex
+        print(starting_vertex)
+        
+        # loop over every child vertex in vertices set at the start vertex
+        for child_vert in self.vertices[starting_vertex]:
+            # if child vertex is not in visited
+            if child_vert not in visited:            
+                # do a recursive call to dft_recursive
+                # using the child vertex and the current visited set as arguments
+                self.dft_recursive(child_vert, visited)
 
 
     def bfs(self, starting_vertex, destination_vertex):
@@ -131,6 +142,7 @@ class Graph:
                 # APPEND THE NEIGHOR TO THE BACK
                     new_path.append(next_vertex)
                     q.enqueue(new_path)
+        return None
 
     def dfs(self, starting_vertex, destination_vertex):
         """
@@ -166,16 +178,53 @@ class Graph:
                 # APPEND THE NEIGHOR TO THE BACK
                     new_path.append(next_vertex)
                     s.push(new_path)
+        return None
 
-    def dfs_recursive(self, starting_vertex):
-        """
-        Return a list containing a path from
-        starting_vertex to destination_vertex in
-        depth-first order.
+    def dfs_recursive(self, starting_vertex, destination_vertex, visited=None, path=None):
+        # # if the visited structure is set to None
+        # if visited is None:
+        #     # create a new set for visited
+        #     visited = set()
+        
+        # if path is None:
+        #     path = []
+        
+        # if destination_vertex in path:
+        #     return path
+        # # add a starting vertex to the visited set
+        # visited.add(starting_vertex)
+        # path.append(starting_vertex)
+        # print("path", path, starting_vertex, self.vertices[starting_vertex], visited)
 
-        This should be done using recursion.
-        """
-        pass  # TODO
+        # if path[-1] == destination_vertex:
+        #     print("finished")
+        #     return path
+        
+        # # loop over every child vertex in vertices set at the start vertex
+        # for child_vert in self.vertices[starting_vertex]:
+        #     # if child vertex is not in visited
+        #     if child_vert not in visited:            
+        #         # do a recursive call to dft_recursive
+        #         # using the child vertex and the current visited set as arguments
+        #         return self.dfs_recursive(child_vert, destination_vertex, visited, path)
+        # path.pop()
+        # return("end")
+
+        if visited is None:
+            visited = set()
+        if path is None:
+            path = []
+        visited.add(starting_vertex)
+        path = path + [starting_vertex]
+        if starting_vertex == destination_vertex:
+            return path
+        for adj_vert in self.vertices[starting_vertex]:
+            if adj_vert not in visited:
+                new_path = self.dfs_recursive(
+                    adj_vert, destination_vertex, visited, path)
+                if new_path:
+                    return new_path
+        return None
 
 if __name__ == '__main__':
     graph = Graph()  # Instantiate your graph
